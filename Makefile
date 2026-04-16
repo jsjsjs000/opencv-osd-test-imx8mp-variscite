@@ -5,8 +5,8 @@ BUILD = release
 BUILD_DIR := build
 PROGRAM = opencv_osd_test
 
-# OSD_PLUGIN_DIR         = $(HOME)/gst-plugin-sko-osd_imx8mp_variscite/
-OSD_PLUGIN_DIR         = $(HOME)/jarsulk-pco/projects/SKO/Software/gst-plugin-sko-osd_imx8mp_variscite/
+OSD_PLUGIN_DIR         = $(HOME)/gst-plugin-sko-osd_imx8mp_variscite/
+# OSD_PLUGIN_DIR         = $(HOME)/jarsulk-pco/projects/SKO/Software/gst-plugin-sko-osd_imx8mp_variscite/
 OSD_PLUGIN_BUILD_DIR   = $(OSD_PLUGIN_DIR)/$(BUILD_DIR)/
 
 export GST_PLUGIN_PATH := $(OSD_PLUGIN_BUILD_DIR)/
@@ -38,6 +38,8 @@ LDLIBS += -lm  # math library
 LDLIBS += -I$(OSD_PLUGIN_DIR)/
 LDLIBS += -L$(OSD_PLUGIN_BUILD_DIR)/
 LDLIBS += -lgstplugin_sko_filters
+
+PKG_CONFIG += $(shell pkg-config --cflags --libs gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0)
 
 all:
 	$(info Build type: $(BUILD))$(info )

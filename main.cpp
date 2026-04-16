@@ -10,6 +10,9 @@
 #include <opencv2/video/tracking.hpp>
 #include "opencv_test.hpp"
 
+#include <gst/gst.h>
+#include "gstskoosd.h"
+
 #define CAMERA     "/dev/video2"
 #define WIDTH      1280
 #define HEIGHT     720
@@ -76,6 +79,7 @@ int main(int argc, char *argv[])
 			"video/x-raw,format=BGR,width=" + std::to_string(frame.cols) +
 					",height=" + std::to_string(frame.rows) + " ! " +
 			"videoconvert ! " +
+			"plugin_sko_osd name=sko_name ! " +
 			// "waylandsink sync=false window-width=" +
 			// 		std::to_string(frame.cols) + " window-height=" + std::to_string(frame.rows);
 			"fpsdisplaysink sync=false video-sink=\"waylandsink sync=false window-width=" +
