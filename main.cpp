@@ -1,4 +1,7 @@
 #include <iostream>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -15,12 +18,38 @@
 
 // #define FACE_DETECT
 
+static struct termios oldt;
+
+static void keyboard_init(void)
+{
+	struct termios newt;
+
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+
+	/* tryb "surowy" bez czekania na Enter */
+	newt.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+	/* stdin non-blocking */
+	int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
+	fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+}
+
+static void keyboard_restore(void)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+	int flags = fcntl(STDIN_FILENO, F_GETFL, 0);
+	fcntl(STDIN_FILENO, F_SETFL, flags & ~O_NONBLOCK);
+}
+
 int main(int argc, char *argv[])
 {
 	cv::VideoCapture cap;
-	OpenCVTest *openCV = new OpenCVTest();
-	if (!openCV->initializeCamera(cap, CAMERA, FORMAT, WIDTH, HEIGHT, FRAMERATE))
-		return 1;
+	OpenCVTest openCV;
+	if (!openCV.initializeCamera(cap, CAMERA, FORMAT, WIDTH, HEIGHT, FRAMERATE))
+		return -1;
 	
 #ifdef FACE_DETECT
 	cv::CascadeClassifier face_cascade;
@@ -34,7 +63,13 @@ int main(int argc, char *argv[])
 	cv::Mat frame;
 	cap >> frame;
 
-	openCV->printInformation(frame);
+	openCV.printInformation(frame);
+
+	keyboard_init();
+
+	printf("Press key:\n");
+	printf("  q - quit\n");
+	printf("\n");
 
 	std::string pipeline =
 			"appsrc is-live=true do-timestamp=true format=time ! "
@@ -55,7 +90,9 @@ int main(int argc, char *argv[])
 	}
 
 	struct timespec last_ts;
-	while (true)
+	clock_gettime(CLOCK_REALTIME, &last_ts);
+	bool running = true;
+	while (running)
 	{
 		// struct tm *tm_info = localtime(&ts.tv_sec);
 
@@ -94,9 +131,19 @@ int main(int argc, char *argv[])
 		cv::cvtColor(frame, bgr, cv::COLOR_YUV2BGR_YUY2);
 		out.write(bgr);
 
-		if (cv::waitKey(1) == 27) // ESC
-			break;
+			/* Read keyboard */
+		char c;
+		ssize_t n = read(STDIN_FILENO, &c, 1);
+		if (n > 0)
+			switch (c)
+			{
+				case 'q':
+					running = false;
+					break;
+			}
 	}
+
+	keyboard_restore();
 
 	return 0;
 }
