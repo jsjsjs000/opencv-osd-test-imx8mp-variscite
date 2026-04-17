@@ -34,18 +34,11 @@ endif
 
 LDLIBS += -lm  # math library
 
-# OSD plugin
-LDLIBS += -I$(OSD_PLUGIN_DIR)/
-LDLIBS += -L$(OSD_PLUGIN_BUILD_DIR)/
-LDLIBS += -lgstplugin_sko_filters
-
-PKG_CONFIG += $(shell pkg-config --cflags --libs gstreamer-1.0 gstreamer-base-1.0 gstreamer-video-1.0)
-
 all:
 	$(info Build type: $(BUILD))$(info )
 	mkdir -p $(BUILD_DIR)
 	${CXX} $(CFLAGS) $(LDFLAGS) \
-			main.cpp opencv_test.cpp \
+			main.cpp opencv_test.cpp draw_demo.cpp \
 			-o $(BUILD_DIR)/$(PROGRAM) \
 			$(PKG_CONFIG) $(LDLIBS)
 

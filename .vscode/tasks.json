@@ -62,6 +62,23 @@
 			"problemMatcher": ["$gcc"],
 			"group": {
 				"kind": "build",
+				"isDefault": false
+			}
+		},
+			/* Cross-compile, upload to i.MX and run program - press q to quit*/
+		{
+			"label": "cross-compile-and-upload-to-i.MX",
+			"type": "shell",
+			"command": [
+				"source ${config:YOCTO_ENVIRONMENT}; ",
+				"set sysroot ${config:SDKTARGETSYSROOT}; ",
+				"make && ",
+				"scp ${config:BUILD_PATH}/${config:PROGRAM} ${config:REMOTE_USER}@${config:TARGET_IP}:${config:REMOTE_DIR} && ",
+				"ssh ${config:REMOTE_USER}@${config:TARGET_IP} 'XDG_RUNTIME_DIR=/run/user/0 ${config:REMOTE_DIR}/${config:PROGRAM}'"
+			],
+			"problemMatcher": ["$gcc"],
+			"group": {
+				"kind": "build",
 				"isDefault": true
 			}
 		}

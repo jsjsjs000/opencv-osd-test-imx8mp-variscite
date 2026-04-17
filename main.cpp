@@ -8,10 +8,10 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/objdetect.hpp>
 #include <opencv2/video/tracking.hpp>
-#include "opencv_test.hpp"
 
-#include <gst/gst.h>
-#include "gstskoosd.h"
+#include "opencv_test.hpp"
+#include "draw.h"
+#include "draw_demo.hpp"
 
 #define CAMERA     "/dev/video2"
 #define WIDTH      1280
@@ -20,6 +20,7 @@
 #define FRAMERATE  50
 
 // #define FACE_DETECT
+#define DRAW_OSD_DEMO
 
 static struct termios oldt;
 
@@ -93,9 +94,15 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+#ifdef DRAW_OSD_DEMO
+	DrawDemo drawDemo;
+#endif
+
 	struct timespec last_ts;
 	clock_gettime(CLOCK_REALTIME, &last_ts);
+	int frameNo = 0;
 	bool running = true;
+
 	while (running)
 	{
 		// struct tm *tm_info = localtime(&ts.tv_sec);
@@ -133,7 +140,14 @@ int main(int argc, char *argv[])
 
 		cv::Mat bgr;
 		cv::cvtColor(frame, bgr, cv::COLOR_YUV2BGR_YUY2);
+
+#ifdef DRAW_OSD_DEMO
+		drawDemo.drawDemo(bgr, frameNo);
+#endif
+
 		out.write(bgr);
+
+		frameNo++;
 
 			/* Read keyboard */
 		char c;

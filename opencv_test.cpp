@@ -36,8 +36,8 @@ void OpenCVTest::printInformation(cv::Mat& frame)
 #endif
 
 	printf("\n");
-	printf("%dx%d, type=%d bits, channels=%d\n", frame.cols, frame.rows,
-			frame.type(), frame.channels());
+	printf("%dx%d, type=%d bits, channels=%d, step=%ld (bytes per line)\n", frame.cols, frame.rows,
+			frame.type(), frame.channels(), frame.step1());
 	printf("CV_CPU_FP16=%d\n", cv::checkHardwareSupport(CV_CPU_FP16));
 	printf("CV_CPU_NEON=%d\n", cv::checkHardwareSupport(CV_CPU_NEON));
 	printf("CPU Features: %s\n", cv::getCPUFeaturesLine().c_str());
