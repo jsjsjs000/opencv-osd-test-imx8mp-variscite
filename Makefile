@@ -38,7 +38,7 @@ all:
 	$(info Build type: $(BUILD))$(info )
 	mkdir -p $(BUILD_DIR)
 	${CXX} $(CFLAGS) $(LDFLAGS) \
-			main.cpp opencv_test.cpp draw_demo.cpp \
+			main.cpp opencv_test.cpp draw_osd.cpp draw_demo.cpp \
 			-o $(BUILD_DIR)/$(PROGRAM) \
 			$(PKG_CONFIG) $(LDLIBS)
 

@@ -1,22 +1,22 @@
-#pragma once
-
 #include <stdio.h>
 #include <string.h>
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include "draw_osd.hpp"
 
-static inline void set_pixel(cv::Mat& bgr, int x, int y, const cv::Vec3b& colorBGR)
+void DrawOsd::set_pixel(cv::Mat& bgr, int x, int y, const cv::Vec3b& colorBGR)
 {
 	bgr.at<cv::Vec3b>(y, x) = colorBGR;
 }
 
-static inline void draw_line(const cv::Mat& bgr, const cv::Point& p1, const cv::Point& p2,
-		const cv::Scalar colorBGR, int thickness = 1)
+void DrawOsd::draw_line(const cv::Mat& bgr, const cv::Point& p1, const cv::Point& p2,
+		const cv::Scalar colorBGR, int thickness)
 {
 	cv::line(bgr, p1, p2, colorBGR, thickness);
 }
 
-static inline void draw_rectangle(const cv::Mat& bgr, const cv::Point& p, const cv::Point& size,
-		const cv::Scalar colorBGR, int corner = 0, int thickness = 1)
+void DrawOsd::draw_rectangle(const cv::Mat& bgr, const cv::Point& p, const cv::Point& size,
+		const cv::Scalar colorBGR, int corner, int thickness)
 {
 	if (corner == 0)  /* normal rectangle */
 	{
@@ -53,8 +53,8 @@ static inline void draw_rectangle(const cv::Mat& bgr, const cv::Point& p, const 
 	}
 }
 
-static inline void draw_cross(const cv::Mat& bgr, const cv::Point& p, const cv::Point& size,
-		const cv::Scalar colorBGR, int skipCenter = 0, int thickness = 1)
+void DrawOsd::draw_cross(const cv::Mat& bgr, const cv::Point& p, const cv::Point& size,
+		const cv::Scalar colorBGR, int skipCenter, int thickness)
 {
 	if (skipCenter == 0)  /* normal cross */
 	{
@@ -77,8 +77,8 @@ static inline void draw_cross(const cv::Mat& bgr, const cv::Point& p, const cv::
 	}
 }
 
-static inline void draw_text(const cv::Mat& bgr, const cv::Point& p, const std::string text,
-		double fontScale, const cv::Scalar colorBGR, bool drawFrame = false)
+void DrawOsd::draw_text(const cv::Mat& bgr, const cv::Point& p, const std::string text,
+		double fontScale, const cv::Scalar colorBGR, bool drawFrame)
 {
 	if (drawFrame)
 		cv::putText(bgr, text, p, cv::FONT_HERSHEY_SIMPLEX, fontScale, cv::Scalar(0, 0, 0), 2);

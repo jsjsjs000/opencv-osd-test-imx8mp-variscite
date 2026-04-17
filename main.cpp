@@ -10,7 +10,7 @@
 #include <opencv2/video/tracking.hpp>
 
 #include "opencv_test.hpp"
-#include "draw.h"
+#include "draw_osd.hpp"
 #include "draw_demo.hpp"
 
 #define CAMERA     "/dev/video2"
@@ -82,7 +82,6 @@ int main(int argc, char *argv[])
 			"video/x-raw,format=BGR,width=" + std::to_string(frame.cols) +
 					",height=" + std::to_string(frame.rows) + " ! " +
 			"videoconvert ! " +
-
 #ifdef SHOW_FPS
 			"fpsdisplaysink sync=false video-sink=\"waylandsink sync=false window-width=" +
 					std::to_string(frame.cols) + " window-height=" + std::to_string(frame.rows) + "\"";
