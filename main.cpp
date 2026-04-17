@@ -19,8 +19,10 @@
 #define FORMAT     "YUY2"
 #define FRAMERATE  50
 
+	/* Configure program */
 // #define FACE_DETECT
 #define DRAW_OSD_DEMO
+#define SHOW_FPS
 
 static struct termios oldt;
 
@@ -80,11 +82,14 @@ int main(int argc, char *argv[])
 			"video/x-raw,format=BGR,width=" + std::to_string(frame.cols) +
 					",height=" + std::to_string(frame.rows) + " ! " +
 			"videoconvert ! " +
-			"plugin_sko_osd name=sko_name ! " +
-			// "waylandsink sync=false window-width=" +
-			// 		std::to_string(frame.cols) + " window-height=" + std::to_string(frame.rows);
+
+#ifdef SHOW_FPS
 			"fpsdisplaysink sync=false video-sink=\"waylandsink sync=false window-width=" +
 					std::to_string(frame.cols) + " window-height=" + std::to_string(frame.rows) + "\"";
+#else
+			"waylandsink sync=false window-width=" +
+					std::to_string(frame.cols) + " window-height=" + std::to_string(frame.rows);
+#endif
 
 	cv::VideoWriter out(pipeline, cv::CAP_GSTREAMER, 0, FRAMERATE, frame.size(), true);
 
