@@ -136,3 +136,10 @@ gst-launch-1.0 videotestsrc ! video/x-raw,format=BGR,width=1280,height=720,frame
 
 gst-launch-1.0 videotestsrc ! video/x-raw,format=BGR,width=1280,height=720,framerate=30/1 ! videoconvert ! \
     fpsdisplaysink sync=true video-sink="waylandsink sync=true window-width=1280 window-height=720"
+
+# camera
+gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,format=NV12,width=1280,height=720,framerate=46/1 ! \
+    waylandsink sync=false
+
+gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,format=NV12,width=1280,height=720,framerate=46/1 ! \
+    fpsdisplaysink sync=false video-sink="waylandsink sync=false"

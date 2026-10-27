@@ -13,7 +13,9 @@
 #include "draw_osd.hpp"
 #include "draw_demo.hpp"
 
-#define CAMERA     "/dev/video2"
+// #define CAMERA     "/dev/video2"
+#define CAMERA     "/dev/video3"
+
 #define WIDTH      1280
 #define HEIGHT     720
 #define FORMAT     "YUY2"
